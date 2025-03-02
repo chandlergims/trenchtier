@@ -89,4 +89,6 @@ export { io };
 // Start server
 httpServer.listen(port, () => {
   console.log(`Server running on port ${port}`);
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`WebSocket server available at ${process.env.NODE_ENV === 'production' ? 'wss://' : 'ws://'}your-domain:${port}`);
 });
