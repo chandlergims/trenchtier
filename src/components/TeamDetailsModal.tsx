@@ -39,12 +39,14 @@ function TeamDetailsModal({ isOpen, onClose, teamId }: TeamDetailsModalProps) {
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
   
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  
   useEffect(() => {
     if (isOpen && teamId) {
       setLoading(true)
       setError(null)
       
-      axios.get(`http://localhost:5000/api/teams/${teamId}`)
+      axios.get(`${apiUrl}/api/teams/${teamId}`)
         .then(response => {
           setTeam(response.data)
         })

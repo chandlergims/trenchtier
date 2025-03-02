@@ -26,7 +26,8 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
 
   useEffect(() => {
     // Create socket connection
-    const socketInstance = io('http://localhost:5000');
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const socketInstance = io(apiUrl);
 
     // Set up event listeners
     socketInstance.on('connect', () => {

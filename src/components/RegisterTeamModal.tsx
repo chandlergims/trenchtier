@@ -56,6 +56,8 @@ function RegisterTeamModal({ isOpen, onClose }: RegisterTeamModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
@@ -84,7 +86,7 @@ function RegisterTeamModal({ isOpen, onClose }: RegisterTeamModalProps) {
         }
       }
       
-      const response = await axios.post('http://localhost:5000/api/teams/register', {
+      const response = await axios.post(`${apiUrl}/api/teams/register`, {
         teamName,
         teamType,
         ownerWalletAddress: yourWalletAddress,

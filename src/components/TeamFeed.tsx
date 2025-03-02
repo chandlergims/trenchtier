@@ -39,14 +39,16 @@ function TeamFeed() {
   const { openTeamDetailsModal } = useModal()
   const { socket } = useWebSocket()
   
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  
   const fetchTeams = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/teams/recent')
+      const response = await axios.get(`${apiUrl}/api/teams/recent`)
       setTeams(response.data)
       setError(null)
       
       // Fetch total number of teams
-      const countResponse = await axios.get('http://localhost:5000/api/teams/count')
+      const countResponse = await axios.get(`${apiUrl}/api/teams/count`)
       setTotalTeams(countResponse.data.count)
     } catch (err) {
       console.error('Error fetching teams:', err)
