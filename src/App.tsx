@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { ToastProvider } from './context/ToastContext'
 import { ModalProvider } from './context/ModalContext'
 import { WebSocketProvider } from './context/WebSocketContext'
+// Removed WalletContext import as it's not being used
 import Navbar from './components/Navbar'
 import Leaderboard from './pages/Leaderboard'
 import Docs from './pages/Docs'
