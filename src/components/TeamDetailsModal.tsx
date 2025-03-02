@@ -48,17 +48,23 @@ function TeamDetailsModal({ isOpen, onClose, teamId }: TeamDetailsModalProps) {
       
       axios.get(`${apiUrl}/api/teams/${teamId}`)
         .then(response => {
-          setTeam(response.data)
+          if (response.data && typeof response.data === 'object') {
+            setTeam(response.data)
+          } else {
+            setError('Invalid team data received')
+            setTeam(null)
+          }
         })
         .catch(err => {
           console.error('Error fetching team details:', err)
           setError('Failed to load team details')
+          setTeam(null)
         })
         .finally(() => {
           setLoading(false)
         })
     }
-  }, [isOpen, teamId])
+  }, [isOpen, teamId, apiUrl])
   
   if (!isOpen) return null
   

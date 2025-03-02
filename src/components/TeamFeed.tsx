@@ -44,15 +44,17 @@ function TeamFeed() {
   const fetchTeams = async () => {
     try {
       const response = await axios.get(`${apiUrl}/api/teams/recent`)
-      setTeams(response.data)
+      // Ensure teams is always an array
+      setTeams(Array.isArray(response.data) ? response.data : [])
       setError(null)
       
       // Fetch total number of teams
       const countResponse = await axios.get(`${apiUrl}/api/teams/count`)
-      setTotalTeams(countResponse.data.count)
+      setTotalTeams(countResponse.data.count || 0)
     } catch (err) {
       console.error('Error fetching teams:', err)
       setError('Failed to load recent teams')
+      setTeams([]) // Set to empty array on error
     } finally {
       setLoading(false)
     }
