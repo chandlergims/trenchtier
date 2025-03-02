@@ -39,17 +39,36 @@ function TeamFeed() {
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
   
   const fetchTeams = async () => {
+    console.log(`Fetching teams from: ${apiUrl}/api/teams/recent`)
     try {
       const response = await axios.get(`${apiUrl}/api/teams/recent`)
+      console.log('API response:', response)
+      
       // Ensure teams is always an array
-      setTeams(Array.isArray(response.data) ? response.data : [])
+      const teamsData = Array.isArray(response.data) ? response.data : []
+      console.log(`Received ${teamsData.length} teams:`, teamsData)
+      
+      setTeams(teamsData)
       setError(null)
       
       // Fetch total number of teams
+      console.log(`Fetching team count from: ${apiUrl}/api/teams/count`)
       const countResponse = await axios.get(`${apiUrl}/api/teams/count`)
+      console.log('Count response:', countResponse.data)
+      
       setTotalTeams(countResponse.data.count || 0)
     } catch (err) {
       console.error('Error fetching teams:', err)
+      // Log more details about the error
+      if (axios.isAxiosError(err)) {
+        console.error('Axios error details:', {
+          status: err.response?.status,
+          statusText: err.response?.statusText,
+          data: err.response?.data,
+          headers: err.response?.headers
+        })
+      }
+      
       setError('Failed to load recent teams')
       setTeams([]) // Set to empty array on error
     } finally {

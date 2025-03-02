@@ -17,12 +17,41 @@ router.get('/', async (req: Request, res: Response) => {
 
 // GET recent teams (for the feed)
 router.get('/recent', async (req: Request, res: Response) => {
+  console.log('GET /api/teams/recent request received');
   try {
     const limit = parseInt(req.query.limit as string) || 10;
+    console.log(`Fetching ${limit} recent teams...`);
+    
+    // Log the MongoDB query we're about to execute
+    console.log('MongoDB query:', {
+      collection: 'teams',
+      operation: 'find',
+      sort: { createdAt: -1 },
+      limit: limit,
+      select: 'teamName teamType createdAt'
+    });
+    
     const teams = await Team.find()
       .sort({ createdAt: -1 })
       .limit(limit)
       .select('teamName teamType createdAt');
+    
+    console.log(`Found ${teams.length} recent teams`);
+    if (teams.length > 0) {
+      console.log('First team:', {
+        id: teams[0]._id,
+        name: teams[0].teamName,
+        type: teams[0].teamType,
+        createdAt: teams[0].createdAt
+      });
+    } else {
+      console.log('No teams found in the database');
+    }
+    
+    // Add CORS headers explicitly
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
     
     res.status(200).json(teams);
   } catch (error) {
