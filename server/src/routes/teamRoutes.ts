@@ -15,9 +15,26 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
+// Middleware to add CORS headers to all responses
+router.use((req: Request, res: Response, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  
+  next();
+});
+
 // GET recent teams (for the feed)
 router.get('/recent', async (req: Request, res: Response) => {
   console.log('GET /api/teams/recent request received');
+  console.log('Request headers:', req.headers);
+  console.log('Request origin:', req.headers.origin);
+  
   try {
     const limit = parseInt(req.query.limit as string) || 10;
     console.log(`Fetching ${limit} recent teams...`);
@@ -47,11 +64,6 @@ router.get('/recent', async (req: Request, res: Response) => {
     } else {
       console.log('No teams found in the database');
     }
-    
-    // Add CORS headers explicitly
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
     
     res.status(200).json(teams);
   } catch (error) {
