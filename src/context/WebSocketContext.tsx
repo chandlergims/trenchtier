@@ -40,20 +40,24 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
     try {
       // Create socket connection
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const wsUrl = apiUrl.replace(/^http/, 'ws'); // Convert HTTP to WS
+      
+      console.log(`API URL: ${apiUrl}`);
+      console.log(`WebSocket URL: ${wsUrl}`);
       
       // Configure socket with timeout and reconnection options
-      socketInstance = io(apiUrl, {
+      socketInstance = io(apiUrl, { // Still use apiUrl here as Socket.IO handles the protocol conversion
         timeout: 10000,
         reconnection: true,
         reconnectionAttempts: 3,
         reconnectionDelay: 1000,
         reconnectionDelayMax: 5000,
-        transports: ['websocket', 'polling'], // Try WebSocket first, then fall back to polling
+        transports: ['websocket'], // Force WebSocket only, no polling fallback
         secure: apiUrl.includes('https'), // Use secure connection for HTTPS URLs
         path: '/socket.io/', // Default Socket.IO path
       });
       
-      console.log(`Connecting to WebSocket at: ${apiUrl}`);
+      console.log(`Connecting to WebSocket at: ${apiUrl} (${wsUrl})`);
 
       // Set up event listeners
       socketInstance.on('connect', () => {

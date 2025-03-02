@@ -21,6 +21,16 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// Ensure Express doesn't intercept WebSocket requests
+app.use((req, res, next) => {
+  if (req.url.includes('/socket.io/')) {
+    console.log('WebSocket request detected:', req.url);
+    return next();
+  }
+  res.header('X-Powered-By', 'Express');
+  next();
+});
+
 // Connect to MongoDB
 const mongoURI = process.env.MONGODB_URI;
 
@@ -54,9 +64,10 @@ const io = new Server(httpServer, {
     methods: ["GET", "POST"],
     credentials: true
   },
-  transports: ["websocket", "polling"], // Try WebSocket first, then fall back to polling
+  transports: ["websocket"], // Force WebSocket only, no polling fallback
   pingTimeout: 60000, // Increase ping timeout to 60 seconds
-  pingInterval: 25000 // Increase ping interval to 25 seconds
+  pingInterval: 25000, // Increase ping interval to 25 seconds
+  allowEIO3: true // Allow Engine.IO 3 compatibility
 });
 
 // Track connected users
