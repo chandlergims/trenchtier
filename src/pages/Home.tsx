@@ -1,20 +1,12 @@
 import { useNavigate } from 'react-router-dom'
-import { useWallet } from '../context/WalletContext'
-import { useToast } from '../context/ToastContext'
 import { HandRaisedIcon, TrophyIcon, GiftIcon } from '@heroicons/react/24/outline'
 import '../styles/Home.css'
 
 function Home() {
   const navigate = useNavigate()
-  const { isConnected } = useWallet()
-  const { showToast } = useToast()
 
   const handleEnter = () => {
-    if (isConnected) {
-      navigate('/leaderboard')
-    } else {
-      showToast('Please connect your wallet first!', 'error')
-    }
+    navigate('/leaderboard')
   }
 
   return (
