@@ -73,36 +73,45 @@ function TeamFeed() {
   
   // Listen for WebSocket events
   useEffect(() => {
-    if (!socket) return
+    if (!socket) {
+      // If socket is null, we'll rely on polling for updates
+      console.log('WebSocket not available, using polling for updates')
+      return
+    }
     
-    // Listen for new team creation events
-    socket.on('team:created', (newTeam: Team) => {
-      console.log('New team created:', newTeam)
-      
-      // Add the new team to the beginning of the list
-      setTeams(prevTeams => {
-        // Check if the team is already in the list (avoid duplicates)
-        const exists = prevTeams.some(team => team._id === newTeam._id)
-        if (exists) return prevTeams
+    try {
+      // Listen for new team creation events
+      socket.on('team:created', (newTeam: Team) => {
+        console.log('New team created:', newTeam)
         
-        // Add the new team to the beginning and limit to 10 teams
-        return [newTeam, ...prevTeams].slice(0, 10)
+        // Add the new team to the beginning of the list
+        setTeams(prevTeams => {
+          // Check if the team is already in the list (avoid duplicates)
+          const exists = prevTeams.some(team => team._id === newTeam._id)
+          if (exists) return prevTeams
+          
+          // Add the new team to the beginning and limit to 10 teams
+          return [newTeam, ...prevTeams].slice(0, 10)
+        })
+        
+        // Increment total teams count
+        setTotalTeams(prev => prev + 1)
       })
       
-      // Increment total teams count
-      setTotalTeams(prev => prev + 1)
-    })
-    
-    // Listen for connected users count updates
-    socket.on('users:count', (data: { connectedUsers: number }) => {
-      console.log('Connected users updated:', data.connectedUsers)
-      setConnectedUsers(data.connectedUsers)
-    })
-    
-    // Clean up event listeners on unmount
-    return () => {
-      socket.off('team:created')
-      socket.off('users:count')
+      // Listen for connected users count updates
+      socket.on('users:count', (data: { connectedUsers: number }) => {
+        console.log('Connected users updated:', data.connectedUsers)
+        setConnectedUsers(data.connectedUsers || 0)
+      })
+      
+      // Clean up event listeners on unmount
+      return () => {
+        socket.off('team:created')
+        socket.off('users:count')
+      }
+    } catch (error) {
+      console.error('Error setting up WebSocket listeners:', error)
+      // Continue without WebSocket functionality
     }
   }, [socket])
   

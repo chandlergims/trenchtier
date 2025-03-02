@@ -4,6 +4,7 @@ import { io, Socket } from 'socket.io-client';
 interface WebSocketContextType {
   socket: Socket | null;
   isConnected: boolean;
+  connectionError: string | null;
 }
 
 const WebSocketContext = createContext<WebSocketContextType | undefined>(undefined);
@@ -23,39 +24,74 @@ interface WebSocketProviderProps {
 export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
+  const [connectionError, setConnectionError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
+  const MAX_RETRIES = 3;
 
   useEffect(() => {
-    // Create socket connection
-    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-    const socketInstance = io(apiUrl);
+    // Only try to connect a limited number of times
+    if (retryCount >= MAX_RETRIES) {
+      console.log('Max WebSocket connection retries reached, giving up');
+      return;
+    }
 
-    // Set up event listeners
-    socketInstance.on('connect', () => {
-      console.log('Connected to WebSocket server');
-      setIsConnected(true);
-    });
+    let socketInstance: Socket | null = null;
+    
+    try {
+      // Create socket connection
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      
+      // Configure socket with timeout and reconnection options
+      socketInstance = io(apiUrl, {
+        timeout: 10000,
+        reconnection: true,
+        reconnectionAttempts: 3,
+        reconnectionDelay: 1000,
+        reconnectionDelayMax: 5000,
+      });
 
-    socketInstance.on('disconnect', () => {
-      console.log('Disconnected from WebSocket server');
-      setIsConnected(false);
-    });
+      // Set up event listeners
+      socketInstance.on('connect', () => {
+        console.log('Connected to WebSocket server');
+        setIsConnected(true);
+        setConnectionError(null);
+      });
 
-    socketInstance.on('connect_error', (error) => {
-      console.error('WebSocket connection error:', error);
-      setIsConnected(false);
-    });
+      socketInstance.on('disconnect', () => {
+        console.log('Disconnected from WebSocket server');
+        setIsConnected(false);
+      });
 
-    // Save socket instance
-    setSocket(socketInstance);
+      socketInstance.on('connect_error', (error) => {
+        console.error('WebSocket connection error:', error);
+        setIsConnected(false);
+        setConnectionError(`Connection error: ${error.message}`);
+        setRetryCount(prev => prev + 1);
+      });
+
+      socketInstance.on('error', (error) => {
+        console.error('WebSocket error:', error);
+        setConnectionError(`Socket error: ${error}`);
+      });
+
+      // Save socket instance
+      setSocket(socketInstance);
+    } catch (error) {
+      console.error('Error initializing WebSocket:', error);
+      setConnectionError(`Initialization error: ${error}`);
+      setRetryCount(prev => prev + 1);
+    }
 
     // Clean up on unmount
     return () => {
-      socketInstance.disconnect();
+      if (socketInstance) {
+        socketInstance.disconnect();
+      }
     };
-  }, []);
+  }, [retryCount]);
 
   return (
-    <WebSocketContext.Provider value={{ socket, isConnected }}>
+    <WebSocketContext.Provider value={{ socket, isConnected, connectionError }}>
       {children}
     </WebSocketContext.Provider>
   );
