@@ -50,10 +50,13 @@ app.get('/health', (req, res) => {
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: true, // Allow all origins
-    methods: ['GET', 'POST'],
+    origin: "*", // Allow all origins
+    methods: ["GET", "POST"],
     credentials: true
-  }
+  },
+  transports: ["websocket", "polling"], // Try WebSocket first, then fall back to polling
+  pingTimeout: 60000, // Increase ping timeout to 60 seconds
+  pingInterval: 25000 // Increase ping interval to 25 seconds
 });
 
 // Track connected users
