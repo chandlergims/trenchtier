@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import Team, { ITeam } from '../models/Team';
-import { io } from '../index';
+import { io } from '../server';
 
 const router = express.Router();
 
