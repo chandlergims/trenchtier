@@ -1,0 +1,394 @@
+.leaderboard-page {
+  flex: 1;
+  padding: 2rem;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.leaderboard-layout {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.leaderboard {
+  flex: 1;
+  max-width: 1100px;
+  margin: 0;
+}
+
+/* PnL Type Selector */
+.pnl-type-selector {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(0, 208, 0, 0.1);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  flex-wrap: wrap;
+}
+
+[data-theme="dark"] .pnl-type-selector {
+  background: rgba(18, 18, 18, 0.95);
+  border-color: rgba(0, 208, 0, 0.1);
+}
+
+.pnl-button {
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-lg);
+  background: transparent;
+  color: var(--text-secondary);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent;
+  letter-spacing: 0.02em;
+  min-width: 120px;
+  font-size: 0.875rem;
+  position: relative;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.pnl-button:hover:not(.disabled) {
+  color: #00D000;
+  background: rgba(0, 208, 0, 0.05);
+  transform: translateY(-1px);
+}
+
+.pnl-button.active {
+  color: #00D000;
+  border-color: rgba(0, 208, 0, 0.2);
+  background: rgba(0, 208, 0, 0.05);
+  font-weight: 600;
+}
+
+.pnl-button.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  color: var(--text-secondary);
+}
+
+.coming-soon-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: rgba(0, 208, 0, 0.1);
+  color: #00D000;
+  font-size: 0.65rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-full);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  border: 1px solid rgba(0, 208, 0, 0.1);
+  white-space: nowrap;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pnl-button.disabled:hover .coming-soon-badge {
+  transform: translateY(-2px);
+  background: rgba(0, 208, 0, 0.15);
+  border-color: rgba(0, 208, 0, 0.2);
+}
+
+/* Register Team Button */
+.register-team-button {
+  display: block;
+  margin: 0 auto;
+  padding: 0.5rem 1.25rem;
+  background: rgba(0, 208, 0, 0.1);
+  color: #00D000;
+  font-weight: 500;
+  border: 1px solid rgba(0, 208, 0, 0.2);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 1rem;
+  position: relative;
+  z-index: 10;
+}
+
+.register-team-button:hover {
+  background: rgba(0, 208, 0, 0.15);
+  border-color: rgba(0, 208, 0, 0.3);
+}
+
+/* Prize Info */
+.prize-info {
+  padding: 2rem 1.5rem;
+  border-bottom: 1px solid rgba(0, 208, 0, 0.1);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+[data-theme="dark"] .prize-info {
+  background: rgba(18, 18, 18, 0.95);
+}
+
+.prize-header {
+  text-align: center;
+}
+
+.total-prize {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #00D000;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.prize-label {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+}
+
+.reset-timer {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(0, 208, 0, 0.05);
+  border: 1px solid rgba(0, 208, 0, 0.1);
+  border-radius: var(--radius-lg);
+  color: #00D000;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.timer-icon {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2;
+  stroke: #00D000;
+  opacity: 0.8;
+}
+
+/* Timeframe Selector */
+.timeframe-selector {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.timeframe-button {
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-lg);
+  background: transparent;
+  color: var(--text-secondary);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent;
+  letter-spacing: 0.02em;
+  min-width: 120px;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+}
+
+.timeframe-button:hover {
+  color: #00D000;
+  background: rgba(0, 208, 0, 0.05);
+  transform: translateY(-1px);
+}
+
+.timeframe-button.active {
+  color: #00D000;
+  border-color: rgba(0, 208, 0, 0.2);
+  background: rgba(0, 208, 0, 0.05);
+  font-weight: 600;
+}
+
+/* Leaderboard */
+.leaderboard {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid rgba(0, 208, 0, 0.1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  max-height: calc(100vh - 200px);
+  display: flex;
+  flex-direction: column;
+}
+
+[data-theme="dark"] .leaderboard {
+  background: rgba(18, 18, 18, 0.95);
+}
+
+.leaderboard-rows {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 208, 0, 0.3) transparent;
+}
+
+.leaderboard-rows::-webkit-scrollbar {
+  width: 6px;
+}
+
+.leaderboard-rows::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.leaderboard-rows::-webkit-scrollbar-thumb {
+  background: rgba(0, 208, 0, 0.2);
+  border-radius: 3px;
+}
+
+.leaderboard-rows::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 208, 0, 0.3);
+}
+
+.leaderboard-header {
+  display: grid;
+  grid-template-columns: 100px 1fr 150px 150px;
+  padding: 1rem 1.5rem;
+  background: rgba(0, 208, 0, 0.05);
+  border-bottom: 1px solid rgba(0, 208, 0, 0.1);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  align-items: center;
+}
+
+.leaderboard-row {
+  display: grid;
+  grid-template-columns: 100px 1fr 150px 150px;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid rgba(0, 208, 0, 0.05);
+  align-items: center;
+  font-size: 0.875rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.leaderboard-row:hover {
+  background: rgba(0, 208, 0, 0.02);
+}
+
+[data-theme="dark"] .leaderboard-row:hover {
+  background: rgba(0, 208, 0, 0.05);
+}
+
+.leaderboard-row span:first-child {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* Top 15 Styling */
+.leaderboard-row:nth-child(-n+15) {
+  background: rgba(0, 208, 0, 0.02);
+}
+
+[data-theme="dark"] .leaderboard-row:nth-child(-n+15) {
+  background: rgba(0, 208, 0, 0.03);
+}
+
+.leaderboard-row:nth-child(-n+3) span:first-child {
+  font-weight: 600;
+  color: #00D000;
+}
+
+.leaderboard-row:nth-child(-n+15) .prize-amount {
+  color: #00D000;
+  font-weight: 600;
+}
+
+/* Your Position Styling */
+.your-rank {
+  background: rgba(0, 208, 0, 0.05) !important;
+  border-top: 1px solid rgba(0, 208, 0, 0.1) !important;
+}
+
+.you-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  background: rgba(0, 208, 0, 0.1);
+  border: 1px solid rgba(0, 208, 0, 0.1);
+  border-radius: var(--radius-full);
+  color: #00D000;
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-left: 0.75rem;
+  letter-spacing: 0.02em;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .leaderboard-page {
+    padding: 1rem;
+  }
+
+  .pnl-type-selector {
+    padding: 1rem;
+    gap: 0.5rem;
+  }
+
+  .pnl-button {
+    flex: 1;
+    padding: 0.5rem 1rem;
+    min-width: 110px;
+  }
+
+  .prize-info {
+    padding: 1.5rem 1rem;
+  }
+
+  .total-prize {
+    font-size: 2rem;
+  }
+
+  .timeframe-selector {
+    flex-direction: column;
+  }
+
+  .timeframe-button {
+    width: 100%;
+  }
+
+  .leaderboard-header,
+  .leaderboard-row {
+    grid-template-columns: 80px 1fr 100px 100px;
+    padding: 0.75rem 1rem;
+    font-size: 0.75rem;
+  }
+
+  .prize-amount {
+    font-size: 0.75rem;
+  }
+}

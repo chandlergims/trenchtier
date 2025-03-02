@@ -1,0 +1,237 @@
+.profile {
+  flex: 1;
+  width: 100%;
+  padding: 3rem 2rem;
+  background: white;
+  min-height: 100vh;
+}
+
+[data-theme="dark"] .profile {
+  background: #121212;
+}
+
+.profile-card {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(139, 92, 246, 0.05);
+  padding: 3rem 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+}
+
+[data-theme="dark"] .profile-card {
+  background: rgba(18, 18, 18, 0.95);
+}
+
+.profile-title {
+  position: absolute;
+  top: 1.5rem;
+  left: 2rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+
+.profile-section {
+  margin: 2rem 0;
+}
+
+.profile-section:first-of-type {
+  margin-top: 0;
+}
+
+.profile-image-upload {
+  width: 120px;
+  height: 120px;
+  border-radius: var(--radius-full);
+  margin: 0 auto;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  border: 1px solid rgba(139, 92, 246, 0.1);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.profile-image-upload:hover {
+  border-color: rgba(139, 92, 246, 0.2);
+}
+
+.profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-icon {
+  width: 100%;
+  height: 100%;
+  padding: 2rem;
+  color: rgb(139, 92, 246);
+  opacity: 0.8;
+}
+
+.upload-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.upload-overlay span {
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.profile-image-upload:hover .upload-overlay {
+  opacity: 1;
+}
+
+.hidden {
+  display: none;
+}
+
+.input-group {
+  margin-bottom: 1.5rem;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 0.75rem;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.input-with-icon {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgb(139, 92, 246);
+  font-size: 1rem;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.profile-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-lg);
+  background: rgba(139, 92, 246, 0.02);
+  border: 1px solid rgba(139, 92, 246, 0.1);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: 0.02em;
+}
+
+.profile-input.with-icon {
+  padding-left: 2.75rem;
+}
+
+.profile-input:focus {
+  outline: none;
+  border-color: rgba(139, 92, 246, 0.2);
+  background: rgba(139, 92, 246, 0.03);
+}
+
+.profile-input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.5;
+}
+
+[data-theme="dark"] .profile-input {
+  background: rgba(139, 92, 246, 0.03);
+}
+
+.save-button {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: var(--radius-lg);
+  background: rgba(139, 92, 246, 0.05);
+  color: rgb(139, 92, 246);
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(139, 92, 246, 0.1);
+  margin-top: 2rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.save-button:not(:disabled):hover {
+  background: rgba(139, 92, 246, 0.08);
+  border-color: rgba(139, 92, 246, 0.2);
+  transform: translateY(-1px);
+}
+
+.save-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.save-button.saving {
+  position: relative;
+  pointer-events: none;
+}
+
+.save-button.saving::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: rgb(139, 92, 246);
+  animation: loading 1s infinite linear;
+  opacity: 0.5;
+}
+
+@keyframes loading {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media (max-width: 768px) {
+  .profile {
+    padding: 2rem 1rem;
+  }
+
+  .profile-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .profile-title {
+    position: relative;
+    top: 0;
+    left: 0;
+    margin-bottom: 2rem;
+  }
+}
