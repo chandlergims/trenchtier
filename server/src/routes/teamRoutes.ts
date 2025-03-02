@@ -112,8 +112,9 @@ router.post('/register', async (req: Request, res: Response) => {
     
     const savedTeam = await newTeam.save();
     
-    // Emit socket event for new team registration
-    io.emit('team:created', {
+    // Socket.io has been removed, so no event emission
+    // Just log the new team creation
+    console.log('New team created:', {
       _id: savedTeam._id,
       teamName: savedTeam.teamName,
       teamType: savedTeam.teamType,

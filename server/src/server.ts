@@ -2,8 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import { createServer } from 'http';
-import { Server } from 'socket.io';
 import teamRoutes from './routes/teamRoutes';
 
 // Load environment variables
@@ -20,16 +18,6 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
-
-// Ensure Express doesn't intercept WebSocket requests
-app.use((req, res, next) => {
-  if (req.url.includes('/socket.io/')) {
-    console.log('WebSocket request detected:', req.url);
-    return next();
-  }
-  res.header('X-Powered-By', 'Express');
-  next();
-});
 
 // Connect to MongoDB
 const mongoURI = process.env.MONGODB_URI;
@@ -56,50 +44,16 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
 });
 
-// Create HTTP server and Socket.io instance
-const httpServer = createServer(app);
-const io = new Server(httpServer, {
-  cors: {
-    origin: "*", // Allow all origins
-    methods: ["GET", "POST"],
-    credentials: true
-  },
-  transports: ["websocket"], // Force WebSocket only, no polling fallback
-  pingTimeout: 60000, // Increase ping timeout to 60 seconds
-  pingInterval: 25000, // Increase ping interval to 25 seconds
-  allowEIO3: true // Allow Engine.IO 3 compatibility
-});
+// Dummy io object for compatibility with existing code
+const io = {
+  emit: () => {} // No-op function
+};
 
-// Track connected users
-let connectedUsers = 0;
-
-// Socket.io connection handler
-io.on('connection', (socket) => {
-  console.log('Client connected:', socket.id);
-  
-  // Increment connected users count
-  connectedUsers++;
-  
-  // Emit updated count to all clients
-  io.emit('users:count', { connectedUsers });
-  
-  socket.on('disconnect', () => {
-    console.log('Client disconnected:', socket.id);
-    
-    // Decrement connected users count
-    connectedUsers--;
-    
-    // Emit updated count to all clients
-    io.emit('users:count', { connectedUsers });
-  });
-});
-
-// Export io instance to use in other files
+// Export io instance to use in other files (now just a dummy)
 export { io };
 
 // Start server
-httpServer.listen(port, () => {
+app.listen(port, () => {
   console.log(`Server running on port ${port}`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`WebSocket server available at ${process.env.NODE_ENV === 'production' ? 'wss://' : 'ws://'}your-domain:${port}`);
 });

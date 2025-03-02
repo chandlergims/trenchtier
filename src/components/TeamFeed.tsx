@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useModal } from '../context/ModalContext'
-import { useWebSocket } from '../context/WebSocketContext'
 import '../styles/TeamFeed.css'
 
 interface Team {
@@ -34,10 +33,8 @@ function TeamFeed() {
   const [teams, setTeams] = useState<Team[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
-  const [connectedUsers, setConnectedUsers] = useState<number>(0)
   const [totalTeams, setTotalTeams] = useState<number>(0)
   const { openTeamDetailsModal } = useModal()
-  const { socket } = useWebSocket()
   
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
   
@@ -63,57 +60,13 @@ function TeamFeed() {
   useEffect(() => {
     fetchTeams()
     
-    // Poll for new teams every 30 seconds as a fallback
+    // Poll for new teams every 30 seconds
     const interval = setInterval(() => {
       fetchTeams()
     }, 30000)
     
     return () => clearInterval(interval)
   }, [])
-  
-  // Listen for WebSocket events
-  useEffect(() => {
-    if (!socket) {
-      // If socket is null, we'll rely on polling for updates
-      console.log('WebSocket not available, using polling for updates')
-      return
-    }
-    
-    try {
-      // Listen for new team creation events
-      socket.on('team:created', (newTeam: Team) => {
-        console.log('New team created:', newTeam)
-        
-        // Add the new team to the beginning of the list
-        setTeams(prevTeams => {
-          // Check if the team is already in the list (avoid duplicates)
-          const exists = prevTeams.some(team => team._id === newTeam._id)
-          if (exists) return prevTeams
-          
-          // Add the new team to the beginning and limit to 10 teams
-          return [newTeam, ...prevTeams].slice(0, 10)
-        })
-        
-        // Increment total teams count
-        setTotalTeams(prev => prev + 1)
-      })
-      
-      // Listen for connected users count updates
-      socket.on('users:count', (data: { connectedUsers: number }) => {
-        console.log('Connected users updated:', data.connectedUsers)
-        setConnectedUsers(data.connectedUsers || 0)
-      })
-      
-      // Clean up event listeners on unmount
-      return () => {
-        socket.off('team:created')
-        socket.off('users:count')
-      }
-    } catch (error) {
-      console.error('Error setting up WebSocket listeners:', error)
-      // Continue without WebSocket functionality
-    }
-  }, [socket])
   
   return (
     <div className="team-feed">
@@ -122,7 +75,7 @@ function TeamFeed() {
         <div className="team-stats">
           <div className="stat-item">
             <div className="online-indicator"></div>
-            <span>{connectedUsers} online</span>
+            <span>Online</span>
           </div>
           <div className="stat-item">
             <span>{totalTeams} teams registered</span>
