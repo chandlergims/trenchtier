@@ -101,14 +101,12 @@ function TeamFeed() {
         <h3>New Teams</h3>
         <div className="team-stats">
           <div className="stat-item">
+            <div className="online-indicator"></div>
+            <span>Online</span>
+          </div>
+          <div className="stat-item">
             <span>{totalTeams} teams registered</span>
           </div>
-          <button 
-            className="refresh-button" 
-            onClick={fetchTeams}
-          >
-            Refresh
-          </button>
         </div>
       </div>
       <div className="team-list">
