@@ -1,6 +1,13 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import cors from 'cors';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import teamRoutes from './server/src/routes/teamRoutes.js';
+
+// Load environment variables
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -8,8 +15,9 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Serve static files from the dist directory
-app.use(express.static(path.join(__dirname, 'dist')));
+// Middleware
+app.use(cors());
+app.use(express.json());
 
 // Log all incoming requests
 app.use((req, res, next) => {
@@ -17,11 +25,16 @@ app.use((req, res, next) => {
   next();
 });
 
-// Skip API requests - these should be handled by the backend server
-app.use('/api', (req, res) => {
-  console.log(`API request received: ${req.method} ${req.url}`);
-  res.status(404).json({ error: 'API endpoint not found on frontend server' });
+// API routes
+app.use('/api/teams', teamRoutes);
+
+// Health check route
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
 });
+
+// Serve static files from the dist directory
+app.use(express.static(path.join(__dirname, 'dist')));
 
 // For any request that doesn't match a static file or API route, serve index.html
 app.get('*', (req, res) => {
@@ -29,7 +42,27 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
+// Connect to MongoDB
+const mongoURI = process.env.MONGODB_URI;
+
+if (mongoURI) {
+  mongoose.connect(mongoURI)
+    .then(() => {
+      console.log('Connected to MongoDB');
+    })
+    .catch((error) => {
+      console.error('MongoDB connection error:', error);
+    });
+} else {
+  console.warn('MongoDB URI not defined, skipping database connection');
+}
+
+// Start server
 app.listen(PORT, () => {
-  console.log(`Frontend server running on port ${PORT}`);
-  console.log(`Note: API requests should be handled by a separate backend server`);
+  console.log(`Server running on port ${PORT}`);
 });
+
+// Create a dummy io object for compatibility with existing code
+global.io = {
+  emit: () => {} // No-op function
+};

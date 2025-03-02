@@ -45,12 +45,23 @@
   gap: 0.25rem;
 }
 
-.online-indicator {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: #10b981; /* Green color for online status */
-  margin-right: 0.25rem;
+.refresh-button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.refresh-button:hover {
+  background-color: #45a049;
+}
+
+.refresh-button:active {
+  background-color: #3d8b40;
 }
 
 .team-list {
