@@ -48,7 +48,12 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
         reconnectionAttempts: 3,
         reconnectionDelay: 1000,
         reconnectionDelayMax: 5000,
+        transports: ['websocket', 'polling'], // Try WebSocket first, then fall back to polling
+        secure: apiUrl.includes('https'), // Use secure connection for HTTPS URLs
+        path: '/socket.io/', // Default Socket.IO path
       });
+      
+      console.log(`Connecting to WebSocket at: ${apiUrl}`);
 
       // Set up event listeners
       socketInstance.on('connect', () => {
