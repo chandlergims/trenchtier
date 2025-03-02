@@ -2,11 +2,11 @@
   "name": "pumpfunreward-server",
   "version": "1.0.0",
   "description": "Backend server for PumpFunReward",
-  "main": "dist/index.js",
+  "main": "dist/server.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/index.js",
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts"
+    "start": "node dist/server.js",
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts"
   },
   "dependencies": {
     "cors": "^2.8.5",
