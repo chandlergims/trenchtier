@@ -56,7 +56,16 @@ function RegisterTeamModal({ isOpen, onClose }: RegisterTeamModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  // Get the API URL from environment variables
+  // In development, it's http://localhost:5000
+  // In production, it's /api (relative URL)
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  
+  // Determine if we need to append /api to the URL
+  // If apiUrl already contains /api (production), don't append it again
+  const registerUrl = apiUrl.includes('/api') 
+    ? `${apiUrl}/teams/register` 
+    : `${apiUrl}/api/teams/register`;
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -86,7 +95,7 @@ function RegisterTeamModal({ isOpen, onClose }: RegisterTeamModalProps) {
         }
       }
       
-      const response = await axios.post(`${apiUrl}/api/teams/register`, {
+      const response = await axios.post(registerUrl, {
         teamName,
         teamType,
         ownerWalletAddress: yourWalletAddress,

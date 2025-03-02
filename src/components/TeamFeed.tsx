@@ -36,12 +36,20 @@ function TeamFeed() {
   const [totalTeams, setTotalTeams] = useState<number>(0)
   const { openTeamDetailsModal } = useModal()
   
+  // Get the API URL from environment variables
+  // In development, it's http://localhost:5000
+  // In production, it's /api (relative URL)
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
   
+  // Determine if we need to append /api to the URL
+  // If apiUrl already contains /api (production), don't append it again
+  const teamsUrl = apiUrl.includes('/api') ? `${apiUrl}/teams/recent` : `${apiUrl}/api/teams/recent`;
+  const countUrl = apiUrl.includes('/api') ? `${apiUrl}/teams/count` : `${apiUrl}/api/teams/count`;
+  
   const fetchTeams = async () => {
-    console.log(`Fetching teams from: ${apiUrl}/api/teams/recent`)
+    console.log(`Fetching teams from: ${teamsUrl}`)
     try {
-      const response = await axios.get(`${apiUrl}/api/teams/recent`)
+      const response = await axios.get(teamsUrl)
       console.log('API response:', response)
       
       // Ensure teams is always an array
@@ -52,8 +60,8 @@ function TeamFeed() {
       setError(null)
       
       // Fetch total number of teams
-      console.log(`Fetching team count from: ${apiUrl}/api/teams/count`)
-      const countResponse = await axios.get(`${apiUrl}/api/teams/count`)
+      console.log(`Fetching team count from: ${countUrl}`)
+      const countResponse = await axios.get(countUrl)
       console.log('Count response:', countResponse.data)
       
       setTotalTeams(countResponse.data.count || 0)

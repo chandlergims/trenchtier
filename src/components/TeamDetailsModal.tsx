@@ -39,14 +39,23 @@ function TeamDetailsModal({ isOpen, onClose, teamId }: TeamDetailsModalProps) {
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
   
+  // Get the API URL from environment variables
+  // In development, it's http://localhost:5000
+  // In production, it's /api (relative URL)
   const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  
+  // Determine if we need to append /api to the URL
+  // If apiUrl already contains /api (production), don't append it again
+  const teamUrl = apiUrl.includes('/api') 
+    ? `${apiUrl}/teams/${teamId}` 
+    : `${apiUrl}/api/teams/${teamId}`;
   
   useEffect(() => {
     if (isOpen && teamId) {
       setLoading(true)
       setError(null)
       
-      axios.get(`${apiUrl}/api/teams/${teamId}`)
+      axios.get(teamUrl)
         .then(response => {
           if (response.data && typeof response.data === 'object') {
             setTeam(response.data)
