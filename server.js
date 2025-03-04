@@ -141,25 +141,62 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
 });
 
-// Serve static files from the dist directory
-app.use(express.static(path.join(__dirname, 'dist')));
+// Serve static files from the dist directory if it exists
+const distPath = path.join(__dirname, 'dist');
+if (fs.existsSync(distPath)) {
+  console.log('Serving static files from dist directory');
+  app.use(express.static(distPath));
 
-// For any request that doesn't match a static file or API route, serve index.html
-app.get('*', (req, res) => {
-  console.log(`Serving index.html for: ${req.url}`);
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-});
+  // For any request that doesn't match a static file or API route, serve index.html
+  app.get('*', (req, res) => {
+    console.log(`Serving index.html for: ${req.url}`);
+    const indexPath = path.join(distPath, 'index.html');
+    if (fs.existsSync(indexPath)) {
+      res.sendFile(indexPath);
+    } else {
+      res.status(404).send('Frontend not built. Please run npm run build first.');
+    }
+  });
+} else {
+  console.log('Dist directory not found. Running in API-only mode.');
+  // Fallback route for when dist directory doesn't exist
+  app.get('*', (req, res, next) => {
+    if (req.url.startsWith('/api')) {
+      // Let API routes be handled by their handlers
+      next();
+    } else {
+      res.status(200).send('Server running in API-only mode. Frontend not built.');
+    }
+  });
+}
 
 // Connect to MongoDB
 const mongoURI = process.env.MONGODB_URI;
 
 if (mongoURI) {
+  console.log('Attempting to connect to MongoDB...');
+  console.log('MongoDB URI defined:', !!mongoURI);
+  console.log('MongoDB URI prefix:', mongoURI.substring(0, 20) + '...');
+  
+  mongoose.set('debug', true);
+  
   mongoose.connect(mongoURI)
     .then(() => {
-      console.log('Connected to MongoDB');
+      console.log('Successfully connected to MongoDB');
+      
+      // Test the connection by counting teams
+      return mongoose.model('Team').countDocuments();
+    })
+    .then((count) => {
+      console.log(`Database contains ${count} teams`);
     })
     .catch((error) => {
       console.error('MongoDB connection error:', error);
+      console.error('Connection string (partial):', mongoURI.substring(0, 20) + '...');
+      // Don't exit process on connection error in production
+      if (process.env.NODE_ENV !== 'production') {
+        process.exit(1);
+      }
     });
 } else {
   console.warn('MongoDB URI not defined, skipping database connection');
