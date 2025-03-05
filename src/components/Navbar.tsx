@@ -50,7 +50,7 @@ function Navbar() {
             Docs
           </Link>
           <a 
-            href="https://x.com/TrenchTier" 
+            href="https://x.com/trenchtierapp" 
             target="_blank" 
             rel="noopener noreferrer"
             className="social-link"
