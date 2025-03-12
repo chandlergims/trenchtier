@@ -39,7 +39,7 @@ function Navbar() {
         <div className="navbar-brand">
           <Link to="/" className="brand-link">
             <img src="/logo.png" alt="trenchwars logo" className="brand-logo" />
-            <span className="brand-text">TrenchTier</span>
+            <span className="brand-text">TrenchGrade</span>
           </Link>
         </div>
         <div className="navbar-menu">
@@ -50,7 +50,7 @@ function Navbar() {
             Docs
           </Link>
           <a 
-            href="https://x.com/trenchtierapp" 
+            href="https://x.com/trenchgradeapp" 
             target="_blank" 
             rel="noopener noreferrer"
             className="social-link"
