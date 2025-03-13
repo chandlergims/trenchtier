@@ -38,8 +38,7 @@ function Navbar() {
       <div className="navbar-container">
         <div className="navbar-brand">
           <Link to="/" className="brand-link">
-            <img src="/logo.png" alt="trenchwars logo" className="brand-logo" />
-            <span className="brand-text">TrenchGrade</span>
+            <span className="brand-text">TrenchWars</span>
           </Link>
         </div>
         <div className="navbar-menu">
