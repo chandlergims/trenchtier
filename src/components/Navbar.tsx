@@ -38,7 +38,7 @@ function Navbar() {
       <div className="navbar-container">
         <div className="navbar-brand">
           <Link to="/" className="brand-link">
-            <span className="brand-text">TrenchWars</span>
+            <span className="brand-text">TrenchWarz</span>
           </Link>
         </div>
         <div className="navbar-menu">
@@ -49,7 +49,7 @@ function Navbar() {
             Docs
           </Link>
           <a 
-            href="https://x.com/trenchgrade" 
+            href="https://x.com/TrenchWarzFun" 
             target="_blank" 
             rel="noopener noreferrer"
             className="social-link"
